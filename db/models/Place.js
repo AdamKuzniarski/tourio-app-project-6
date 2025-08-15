@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import "./Comments";
 const { Schema } = mongoose;
 
-const productSchema = new Schema({
+const placeSchema = new Schema({
   name: { type: String, required: true },
   image: { type: String, required: true },
   location: { type: String }, // required eintragen!!
@@ -11,7 +11,6 @@ const productSchema = new Schema({
   comments: { type: [Schema.Types.ObjectId], ref: "Comments" },
 });
 
-const Places =
-  mongoose.models.Places || mongoose.model("Places", productSchema);
+const Places = mongoose.models.Places || mongoose.model("Places", placeSchema);
 
 export default Places;
