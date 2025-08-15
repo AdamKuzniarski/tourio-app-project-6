@@ -7,10 +7,21 @@ export default function EditPage() {
   const router = useRouter();
   const { isReady } = router;
   const { id } = router.query;
-  const { data: place, isLoading, error } = useSWR(`/api/places/${id}`);
+  const { data: place, isLoading, error, mutate } = useSWR(`/api/places/${id}`);
 
-  async function editPlace(place) {
-    console.log("Editing place ...");
+  async function editPlace(placeData) {
+    const response = await fetch(`/api/places/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(placeData),
+    });
+    if (!response.ok) {
+      return console.error(response.status);
+    }
+
+    mutate();
+
+    router.push(`/places/${id}`);
   }
 
   if (!isReady || isLoading || error) return <h2>Loading...</h2>;
