@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import "./Comments";
+import "./Comment";
 const { Schema } = mongoose;
 
 const placeSchema = new Schema({
@@ -11,6 +11,6 @@ const placeSchema = new Schema({
   comments: { type: [Schema.Types.ObjectId], ref: "Comments" },
 });
 
-const Places = mongoose.models.Places || mongoose.model("Places", placeSchema);
+const Place = mongoose.models.Place || mongoose.model("Place", placeSchema);
 
-export default Places;
+export default Place;
