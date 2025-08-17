@@ -1,4 +1,4 @@
- import styled from 'styled-components';
+import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { FormContainer, Input, Label } from './Form';
 import { StyledButton } from './StyledButton';

@@ -1,5 +1,5 @@
-import dbConnect from '@/db/connect.js';
-import Place from '@/db/models/Place.js';
+import dbConnect from "@/db/connect.js";
+import Place from "@/db/models/Place.js";
 
 /*---------------------------------------------------------------------------------
 | Routen-Handling für GET/POST-Request
@@ -14,27 +14,28 @@ import Place from '@/db/models/Place.js';
 |                      Response an den Client
 */
 export default async function handler(request, response) {
-	await dbConnect();
+  await dbConnect();
 
-	if (request.method === 'GET') {
-		const places = await Place.find();
+  if (request.method === "GET") {
+    const places = await Place.find();
 
-		if (!places) {
-			return response.status(404).json({ status: 'Not found' });
-      }
-      
-      response.status(200).json(places);
+    if (!places) {
+      response.status(404).json({ status: "Not found" });
       return;
-	}
+    }
 
-	if (request.method === 'POST') {
-      const placeData = request.body;
-      
-		await Place.create(placeData);
+    response.status(200).json(places);
+    return;
+  }
 
-      response.status(201).json({ status: 'Place created' });
-      return;
-	}
+  if (request.method === "POST") {
+    const placeData = request.body;
 
-	response.status(405).json({ status: 'Method not Allowed' });
+    await Place.create(placeData);
+
+    response.status(201).json({ status: "Place created" });
+    return;
+  }
+
+  response.status(405).json({ status: "Method not Allowed" });
 }
