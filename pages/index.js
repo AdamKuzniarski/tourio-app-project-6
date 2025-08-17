@@ -9,6 +9,8 @@ const ListContainer = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   width: 100%;
+
+   padding: 0;
 `;
 const FixedLink = styled(StyledLink)`
   position: fixed;
@@ -17,12 +19,12 @@ const FixedLink = styled(StyledLink)`
 `;
 
 export default function Home() {
-  const { data } = useSWR("/api/places", { fallbackData: [] });
+  const { data: places } = useSWR("/api/places", { fallbackData: [] });   
 
   return (
     <>
       <ListContainer>
-        {data.map((place) => {
+        {places.map((place) => {
           return (
             <li key={place._id}>
               <Card
