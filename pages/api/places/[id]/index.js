@@ -1,5 +1,6 @@
-import dbConnect from "@/db/connect.js";
-import Place from "@/db/models/Place.js";
+import dbConnect from '@/db/connect.js';
+import Place from '@/db/models/Place.js';
+import Comment from '@/db/models/Comment';
 
 /*---------------------------------------------------------------------------------
 | Routen-Handling für GET/PUT/DELETE-Request
@@ -14,41 +15,44 @@ import Place from "@/db/models/Place.js";
 |                      Response an den Client
 | DELETE:
 | - Client/Frontend  : deletePlace() triggert DELETE-Request (-->places/[id]/index.js)
-| - ServerAPI/Backend: Löschen eines DB-Eintrags mit Model.findByIdAndDelete(id),
+| - ServerAPI/Backend: - Löschen eines DB-Eintrags mit Model.findByIdAndDelete(id),
+|                      - Löschen aller Kommentare zu diesem DB-Eintrag mit Model.deleteMany()
 |                      Response an den Client
 */
 export default async function handler(request, response) {
-   await dbConnect();
-   
-  const { id } = request.query;
+	await dbConnect();
 
-  if (request.method === "GET") {
-    const place = await Place.findById(id);
+	const { id } = request.query;
 
-    if (!place) {
-      response.status(404).json({ message: "Place not found" });
-      return;
-    }
+	if (request.method === 'GET') {
+		const place = await Place.findById(id);
 
-    response.status(200).json(place);
-    return;
-  }
+		if (!place) {
+			response.status(404).json({ message: 'Place not found' });
+			return;
+		}
 
-  if (request.method === "PUT") {
-    const placeData = request.body;
+		response.status(200).json(place);
+		return;
+	}
 
-    await Place.findByIdAndUpdate(id, placeData);
+	if (request.method === 'PUT') {
+		const placeData = request.body;
 
-    response.status(200).json({ message: `Place updated` });
-    return;
-  }
+		await Place.findByIdAndUpdate(id, placeData);
 
-  if (request.method === "DELETE") {
-    await Place.findByIdAndDelete(id);
+		response.status(200).json({ message: `Place updated` });
+		return;
+	}
 
-    response.status(200).json({ message: `Place deleted` });
-    return;
-  }
+	if (request.method === 'DELETE') {
+		await Place.findByIdAndDelete(id);
 
-  response.status(405).json({ message: "Method not Allowed" });
+		await Comment.deleteMany({ placeId: id }); //Kommentare zum Place löschen!!
+
+		response.status(200).json({ message: `Place deleted` });
+		return;
+	}
+
+	response.status(405).json({ message: 'Method not Allowed' });
 }

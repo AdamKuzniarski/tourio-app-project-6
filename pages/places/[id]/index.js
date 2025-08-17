@@ -91,6 +91,13 @@ export default function DetailsPage() {
 					Delete
 				</StyledButton>
 			</ButtonContainer>
+
+			{/*---------------------------------------------------------------------------------
+         | Kommentar-Block
+         |----------------------------------------------------------------------------------
+         | 
+         */}
+			<Comments locationName={place.name} />
 		</>
 	);
 }
