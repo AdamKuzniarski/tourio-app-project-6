@@ -1,40 +1,49 @@
-import styled from "styled-components";
-import { useRouter } from "next/router";
-import Form from "../components/Form";
-import { StyledLink } from "../components/StyledLink";
-import useSWR from "swr";
+import styled from 'styled-components';
+import { useRouter } from 'next/router';
+import Form from '../components/Form';
+import { StyledLink } from '../components/StyledLink';
+import useSWR from 'swr';
 
 const StyledBackLink = styled(StyledLink)`
-  justify-self: flex-start;
+	justify-self: flex-start;
 `;
 
 export default function CreatePlacePage() {
-  const router = useRouter();
+	const router = useRouter();
 
-  const { mutate } = useSWR("/api/places");
+	const { mutate } = useSWR('/api/places');
 
-  async function addPlace(placeData) {
-    console.log("adding place");
-    const response = await fetch("/api/places", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(placeData),
-    });
+	/*---------------------------------------------------------------------------------
+   | Place Create
+   |----------------------------------------------------------------------------------
+   | - POST-Request an die Backend-API (Endpoint: /api/places)
+   | - Formular-Daten als body im JSON-Format mitgeben
+   | - Die API erstellt anhand der Daten einen neuen DB-Eintrag
+   | - SWR-mutate() revalidiert und aktualisiert bei Änderungen die Daten (refetch)
+   */
+	async function addPlace(placeData) {
+		const response = await fetch('/api/places', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(placeData),
+		});
 
-    if (!response.ok) {
-      return console.error(response.status);
-    }
+		if (!response.ok) {
+			return console.error(response.status);
+		}
 
-    mutate();
+		mutate();
 
-    router.push("/");
-  }
+		router.push('/');
+	}
 
-  return (
-    <>
-      <h2 id="add-place">Add Place</h2>
-      <StyledBackLink href="/">back</StyledBackLink>
-      <Form onSubmit={addPlace} formName={"add-place"} />
-    </>
-  );
+	return (
+		<>
+         <h2 id="add-place">Add Place</h2>
+         
+         <StyledBackLink href="/">back</StyledBackLink>
+         
+			<Form onSubmit={addPlace} formName={'add-place'} />
+		</>
+	);
 }
