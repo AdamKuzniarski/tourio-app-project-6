@@ -32,7 +32,10 @@ export default function Comments({ locationName }) {
 	/*---------------------------------------------------------------------------------
    | Comment Create
    |----------------------------------------------------------------------------------
-   | 
+   | - POST-Request an die Backend-API (Endpoint: /api/comments)
+   | - Formular-Daten als body im JSON-Format mitgeben
+   | - Die API erstellt anhand der Daten einen neuen DB-Eintrag
+   | - SWR-mutate() revalidiert und aktualisiert bei Änderungen die Daten (refetch)
    */
 	async function handleSubmitComment(event) {
 		event.preventDefault();
@@ -45,7 +48,7 @@ export default function Comments({ locationName }) {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ ...commentData, place: id }),
+			body: JSON.stringify(commentData),
 		});
 
 		if (!response.ok) {
@@ -61,7 +64,9 @@ export default function Comments({ locationName }) {
 	/*---------------------------------------------------------------------------------
    | Comment Delete
    |----------------------------------------------------------------------------------
-   | 
+   | - DELETE-Request an die Backend-API (Endpoint: /api/comments/${id})
+   | - Mitgabe der comment_id als Query-Parameter (?comment_id=${comment_id)
+   | - Die API löscht den DB-Eintrag des Kommentars zur comment_id
    */
 	async function handleDeleteComment(comment_id) {
 		const response = await fetch(`/api/comments/${id}?comment_id=${comment_id}`, {
